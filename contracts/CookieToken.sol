@@ -23,19 +23,7 @@ contract CookieToken is Token("COOKIE", "Cookie coin", 9, 1000), ERC20, ERC223 {
     }
 
     function transfer(address _to, uint _value) public returns (bool) {
-        bool isValidValue = (_value > 0);
-        bool hasEnoughBalance = (_value <= _balanceOf[msg.sender]);
-        bool isAContract = isContract(_to);
-
-        if (!isValidValue || !hasEnoughBalance || isAContract)
-            return false;
-
-        _balanceOf[msg.sender] = _balanceOf[msg.sender].sub(_value);
-        _balanceOf[_to] = _balanceOf[_to].add(_value);
-
-        Transfer(msg.sender, _to, _value);
-
-        return true;
+        return transfer(_to, _value, "");
     }
 
     function transfer(address _to, uint _value, bytes _data) public returns (bool) {
@@ -43,14 +31,16 @@ contract CookieToken is Token("COOKIE", "Cookie coin", 9, 1000), ERC20, ERC223 {
         bool hasEnoughBalance = (_value <= _balanceOf[msg.sender]);
         bool isAContract = isContract(_to);
 
-        if (!isValidValue || !hasEnoughBalance || !isAContract)
+        if (!isValidValue || !hasEnoughBalance)
             return false;
 
         _balanceOf[msg.sender] = _balanceOf[msg.sender].sub(_value);
         _balanceOf[_to] = _balanceOf[_to].add(_value);
 
-        ERC223ReceivingContract asd = ERC223ReceivingContract(_to);
-        asd.tokenFallback(msg.sender, _value, _data);
+        if (isAContract) {
+            ERC223ReceivingContract _contract = ERC223ReceivingContract(_to);
+            _contract.tokenFallback(msg.sender, _value, _data);
+        }
 
         Transfer(msg.sender, _to, _value, _data);
 
