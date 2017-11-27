@@ -1,16 +1,16 @@
 pragma solidity ^0.4.0;
 
-import "Token.sol";
-import "ERC20.sol";
-import "ERC223.sol";
-import "ERC223ReceivingContract.sol";
-import "SafeMath.sol";
+import "./Token.sol";
+import "./ERC20.sol";
+import "./ERC223.sol";
+import "./ERC223ReceivingContract.sol";
+import "./SafeMath.sol";
 
-contract CookieCoinToken is Token("COOKIE", "Cookie coin", 9, 1000), ERC20, ERC223 {
+contract CookieToken is Token("COOKIE", "Cookie coin", 9, 1000), ERC20, ERC223 {
 
     using SafeMath for uint;
 
-    function CookieCoinToken() public {
+    function CookieToken() public {
         _balanceOf[msg.sender] = _totalSupply;
     }
 
