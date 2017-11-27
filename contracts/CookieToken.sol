@@ -83,6 +83,10 @@ contract CookieToken is Token("COOKIE", "Cookie coin", 9, 1000), ERC20, ERC223 {
     }
 
     function approve(address _spender, uint _value) public returns (bool) {
+        bool hasEnoughBalance = _balanceOf[msg.sender] >= _value;
+        if (!hasEnoughBalance)
+            return false;
+
         _allowances[msg.sender][_spender] = _value;
 
         Approval(msg.sender, _spender, _value);
